@@ -1,0 +1,70 @@
+Initializing error report...
+ 1   Real_Time_Situation (
+ 2      Generation_Tool    => "MAST Schedulability Analysis, version 1.5.1.0",
+ 3      Generation_Profile => "/usr/local/mast/mast_analysis default /home/opolo70/mast/uah_asw/uah_asw_str1 /home/opolo70/mast/uah_asw/uah_asw_str1.out",
+ 4      Generation_Date    => 2025-05-06T13:11:40);
+ 6   Transaction (
+ 7      Name     => trans_new_rejected_tc,
+ 8      Results  => 
+ 9          ((Type                          => Timing_Result,
+ 10           Event_Name                    => ev_irq18bottomhalf_signal,
+ 11           Num_Of_Suspensions            => 0,
+ 12           Worst_Blocking_Time           => 0.000,
+ 13           Worst_Global_Response_Times   => 
+ 14              ((Referenced_Event => ev_new_rejected_tc,
+ 15                Time_Value       => 0.001012)),
+ 16           Best_Global_Response_Times    => 
+ 17              ((Referenced_Event => ev_new_rejected_tc,
+ 18                Time_Value       => 1.002E-04)),
+ 19           Jitters                       => 
+ 20              ((Referenced_Event => ev_new_rejected_tc,
+ 21                Time_Value       => 9.118E-04))),
+ 22          (Type                          => Timing_Result,
+ 23           Event_Name                    => ev_rxtc_edroomirqsignal,
+ 24           Num_Of_Suspensions            => 0,
+ 25           Worst_Blocking_Time           => 0.000,
+ 26           Worst_Global_Response_Times   => 
+ 27              ((Referenced_Event => ev_new_rejected_tc,
+ 28                Time_Value       => 0.002042)),
+ 29           Best_Global_Response_Times    => 
+ 30              ((Referenced_Event => ev_new_rejected_tc,
+ 31                Time_Value       => 2.022E-04)),
+ 32           Jitters                       => 
+ 33              ((Referenced_Event => ev_new_rejected_tc,
+ 34                Time_Value       => 0.001840))),
+ 35          (Type                          => Timing_Result,
+ 36           Event_Name                    => dl_new_rejected_tc,
+ 37           Num_Of_Suspensions            => 1,
+ 38           Worst_Blocking_Time           => 1.000E-04,
+ 39           Worst_Global_Response_Times   => 
+ 40              ((Referenced_Event => ev_new_rejected_tc,
+ 41                Time_Value       => 0.015102)),
+ 42           Best_Global_Response_Times    => 
+ 43              ((Referenced_Event => ev_new_rejected_tc,
+ 44                Time_Value       => 0.001404)),
+ 45           Jitters                       => 
+ 46              ((Referenced_Event => ev_new_rejected_tc,
+ 47                Time_Value       => 0.013698)))));
+ 49  Transaction (
+ 50     Name     => trans_hk_fdir,
+ 51     Results  => 
+ 52         ((Type                          => Timing_Result,
+ 53           Event_Name                    => dl_ev_hk_fdir,
+ 54           Num_Of_Suspensions            => 0,
+ 55           Worst_Blocking_Time           => 0.000,
+ 56           Worst_Global_Response_Times   => 
+ 57              ((Referenced_Event => ev_hk_fdir,
+ 58                Time_Value       => 0.024094)),
+ 59           Best_Global_Response_Times    => 
+ 60              ((Referenced_Event => ev_hk_fdir,
+ 61                Time_Value       => 0.010002)),
+ 62           Jitters                       => 
+ 63              ((Referenced_Event => ev_hk_fdir,
+ 64                Time_Value       => 0.014092)))));
+ 66  Processing_Resource (
+ 67     Name     => leon3,
+ 68     Results  => 
+ 69         ((Type   => Utilization,
+ 70           Total  => 2.50%)));
+ 71  
+

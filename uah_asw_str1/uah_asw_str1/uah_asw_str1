@@ -1,0 +1,405 @@
+Processing_Resource (
+   Type                   => Regular_Processor,
+   Name                   => leon3,
+   Max_Interrupt_Priority => 16,
+   Min_Interrupt_Priority => 1,
+   Worst_ISR_Switch       => 1.000E-07,
+   Avg_ISR_Switch         => 1.000E-07,
+   Best_ISR_Switch        => 1.000E-07,
+   System_Timer           => 
+      ( Type           => Ticker,
+        Worst_Overhead => 1.000E-05,
+        Avg_Overhead   => 1.000E-05,
+        Best_Overhead  => 1.000E-05,
+        Period         => 0.010000),
+   Speed_Factor           => 1.00);
+
+Scheduler (
+   Type            => Primary_Scheduler,
+   Name            => rtems,
+   Host            => leon3,
+   Policy          => 
+      ( Type                 => Fixed_Priority,
+        Worst_Context_Switch => 1.000E-06,
+        Avg_Context_Switch   => 1.000E-06,
+        Best_Context_Switch  => 1.000E-06,
+        Max_Priority         => 16,
+        Min_Priority         => 1));
+
+Scheduling_Server (
+   Type                       => Regular,
+   Name                       => tcmanager,
+   Server_Sched_Parameters    => 
+      ( Type         => Fixed_Priority_Policy,
+        The_Priority => 3,
+        Preassigned  => YES),
+   Scheduler                  => rtems);
+
+Scheduling_Server (
+   Type                       => Regular,
+   Name                       => hk_fdirmng,
+   Server_Sched_Parameters    => 
+      ( Type         => Fixed_Priority_Policy,
+        The_Priority => 2,
+        Preassigned  => YES),
+   Scheduler                  => rtems);
+
+Scheduling_Server (
+   Type                       => Regular,
+   Name                       => bkgtcexec,
+   Server_Sched_Parameters    => 
+      ( Type         => Fixed_Priority_Policy,
+        The_Priority => 1,
+        Preassigned  => YES),
+   Scheduler                  => rtems);
+
+Scheduling_Server (
+   Type                       => Regular,
+   Name                       => irq18bottomhalftask,
+   Server_Sched_Parameters    => 
+      ( Type         => Fixed_Priority_Policy,
+        The_Priority => 4,
+        Preassigned  => YES),
+   Scheduler                  => rtems);
+
+Scheduling_Server (
+   Type                       => Regular,
+   Name                       => irq18handler,
+   Server_Sched_Parameters    => 
+      ( Type         => Interrupt_FP_Policy,
+        The_Priority => 6),
+   Scheduler                  => rtems);
+
+Scheduling_Server (
+   Type                       => Regular,
+   Name                       => observmng,
+   Server_Sched_Parameters    => 
+      ( Type         => Fixed_Priority_Policy,
+        The_Priority => 5,
+        Preassigned  => YES),
+   Scheduler                  => rtems);
+
+Shared_Resource (
+   Type     => Priority_Inheritance_Resource,
+   Name     => sc_channeltx);
+
+Operation (
+   Type                       => Simple,
+   Name                       => irq18tophalf,
+   Worst_Case_Execution_Time  => 1.000E-04,
+   Avg_Case_Execution_Time    => 1.000E-04,
+   Best_Case_Execution_Time   => 1.000E-04);
+
+Operation (
+   Type                       => Simple,
+   Name                       => irq18bottomhalf,
+   Worst_Case_Execution_Time  => 1.000E-04,
+   Avg_Case_Execution_Time    => 1.000E-04,
+   Best_Case_Execution_Time   => 1.000E-04);
+
+Operation (
+   Type                       => Simple,
+   Name                       => fgettc,
+   Worst_Case_Execution_Time  => 0.001000,
+   Avg_Case_Execution_Time    => 0.001000,
+   Best_Case_Execution_Time   => 0.001000);
+
+Operation (
+   Type                       => Simple,
+   Name                       => sc_channeltx_tm,
+   Worst_Case_Execution_Time  => 1.000E-04,
+   Avg_Case_Execution_Time    => 1.000E-04,
+   Best_Case_Execution_Time   => 1.000E-04,
+   Shared_Resources_To_Lock   => 
+      ( sc_channeltx),
+   Shared_Resources_To_Unlock => 
+      ( sc_channeltx));
+
+Operation (
+   Type                     => Enclosing,
+   Name                     => fmngtcrejection,
+   Worst_Case_Execution_Time=> 2.000E-04,
+   Avg_Case_Execution_Time  => 2.000E-04,
+   Best_Case_Execution_Time => 2.000E-04,
+   Composite_Operation_List => 
+      ( sc_channeltx_tm));
+
+Operation (
+   Type                     => Enclosing,
+   Name                     => fdohk_fdir,
+   Worst_Case_Execution_Time=> 0.010000,
+   Avg_Case_Execution_Time  => 0.010000,
+   Best_Case_Execution_Time => 0.010000,
+   Composite_Operation_List => 
+      ( sc_channeltx_tm));
+
+Operation (
+   Type                     => Composite,
+   Name                     => cop_ftc_rejection,
+   Composite_Operation_List => 
+      ( fgettc,
+        fmngtcrejection));
+
+Operation (
+   Type                     => Enclosing,
+   Name                     => fmngtcacceptance,
+   Worst_Case_Execution_Time=> 2.000E-04,
+   Avg_Case_Execution_Time  => 2.000E-04,
+   Best_Case_Execution_Time => 2.000E-04,
+   Composite_Operation_List => 
+      ( sc_channeltx_tm));
+
+Operation (
+   Type                     => Enclosing,
+   Name                     => fexectc,
+   Worst_Case_Execution_Time=> 0.001000,
+   Avg_Case_Execution_Time  => 0.001000,
+   Best_Case_Execution_Time => 0.001000,
+   Composite_Operation_List => 
+      ( sc_channeltx_tm));
+
+Operation (
+   Type                     => Enclosing,
+   Name                     => fexechk_fdir_tc,
+   Worst_Case_Execution_Time=> 0.001000,
+   Avg_Case_Execution_Time  => 0.001000,
+   Best_Case_Execution_Time => 0.001000,
+   Composite_Operation_List => 
+      ( sc_channeltx_tm));
+
+Operation (
+   Type                     => Enclosing,
+   Name                     => fexecbkgtc,
+   Worst_Case_Execution_Time=> 0.020000,
+   Avg_Case_Execution_Time  => 0.020000,
+   Best_Case_Execution_Time => 0.020000,
+   Composite_Operation_List => 
+      ( sc_channeltx_tm));
+
+Operation (
+   Type                       => Simple,
+   Name                       => ftcexecctrl,
+   Worst_Case_Execution_Time  => 1.000E-04,
+   Avg_Case_Execution_Time    => 1.000E-04,
+   Best_Case_Execution_Time   => 1.000E-04);
+
+Operation (
+   Type                       => Simple,
+   Name                       => ffwd_x_tc,
+   Worst_Case_Execution_Time  => 1.000E-04,
+   Avg_Case_Execution_Time    => 1.000E-04,
+   Best_Case_Execution_Time   => 1.000E-04);
+
+Operation (
+   Type                       => Simple,
+   Name                       => fdoattitudectrl,
+   Worst_Case_Execution_Time  => 0.010000,
+   Avg_Case_Execution_Time    => 0.010000,
+   Best_Case_Execution_Time   => 0.010000);
+
+Operation (
+   Type                       => Simple,
+   Name                       => fprogattitudectrl,
+   Worst_Case_Execution_Time  => 1.000E-04,
+   Avg_Case_Execution_Time    => 1.000E-04,
+   Best_Case_Execution_Time   => 1.000E-04);
+
+Operation (
+   Type                     => Composite,
+   Name                     => tc_exec_prio,
+   Composite_Operation_List => 
+      ( fgettc,
+        fmngtcacceptance,
+        ftcexecctrl,
+        fexectc));
+
+Operation (
+   Type                     => Composite,
+   Name                     => f_acc_fwd,
+   Composite_Operation_List => 
+      ( fgettc,
+        fmngtcacceptance,
+        ftcexecctrl,
+        ffwd_x_tc));
+
+Transaction (
+   Type            => regular,
+   Name            => trans_hk_fdir,
+   External_Events => 
+      ( ( Type       => Periodic,
+          Name       => ev_hk_fdir,
+          Period     => 1.000,
+          Max_Jitter => 0.000,
+          Phase      => 0.000)),
+   Internal_Events => 
+      ( ( Type => Regular,
+          Name => dl_ev_hk_fdir,
+          Timing_Requirements => 
+            ( Type             => Hard_Global_Deadline,
+              Deadline         => 1.000,
+              Referenced_Event => ev_hk_fdir))),
+   Event_Handlers  => 
+      ( (Type               => Activity,
+         Input_Event        => ev_hk_fdir,
+         Output_Event       => dl_ev_hk_fdir,
+         Activity_Operation => fdohk_fdir,
+         Activity_Server    => hk_fdirmng)));
+
+Transaction (
+   Type            => regular,
+   Name            => trans_background_ck,
+   External_Events => 
+      ( ( Type             => Bursty,
+          Name             => new_bg_tc,
+          Avg_Interarrival => 0.000,
+          Distribution     => UNIFORM,
+          Bound_Interval   => 1.000,
+          Max_Arrivals     => 1)),
+   Internal_Events => 
+      ( ( Type => Regular,
+          Name => irqsignal),
+        ( Type => Regular,
+          Name => newtc),
+        ( Type => Regular,
+          Name => dl_dfkg_tc,
+          Timing_Requirements => 
+            ( Type             => Hard_Global_Deadline,
+              Deadline         => 1.000,
+              Referenced_Event => new_bg_tc)),
+        ( Type => Regular,
+          Name => fin)),
+   Event_Handlers  => 
+      ( (Type               => Activity,
+         Input_Event        => new_bg_tc,
+         Output_Event       => irqsignal,
+         Activity_Operation => irq18tophalf,
+         Activity_Server    => irq18handler),
+        (Type               => Activity,
+         Input_Event        => irqsignal,
+         Output_Event       => newtc,
+         Activity_Operation => irq18bottomhalf,
+         Activity_Server    => irq18bottomhalftask),
+        (Type               => Activity,
+         Input_Event        => newtc,
+         Output_Event       => dl_dfkg_tc,
+         Activity_Operation => f_acc_fwd,
+         Activity_Server    => tcmanager),
+        (Type               => Activity,
+         Input_Event        => dl_dfkg_tc,
+         Output_Event       => fin,
+         Activity_Operation => fexecbkgtc,
+         Activity_Server    => bkgtcexec)));
+
+Transaction (
+   Type            => regular,
+   Name            => trans_prio_tc,
+   External_Events => 
+      ( ( Type             => Bursty,
+          Name             => prio_tc,
+          Avg_Interarrival => 0.000,
+          Distribution     => UNIFORM,
+          Bound_Interval   => 1.000,
+          Max_Arrivals     => 6)),
+   Internal_Events => 
+      ( ( Type => Regular,
+          Name => iqrsignal),
+        ( Type => Regular,
+          Name => newtc),
+        ( Type => Regular,
+          Name => dl_prio_tc,
+          Timing_Requirements => 
+            ( Type             => Hard_Global_Deadline,
+              Deadline         => 1.000,
+              Referenced_Event => prio_tc))),
+   Event_Handlers  => 
+      ( (Type               => Activity,
+         Input_Event        => prio_tc,
+         Output_Event       => iqrsignal,
+         Activity_Operation => irq18tophalf,
+         Activity_Server    => irq18handler),
+        (Type               => Activity,
+         Input_Event        => iqrsignal,
+         Output_Event       => newtc,
+         Activity_Operation => irq18bottomhalf,
+         Activity_Server    => irq18bottomhalftask),
+        (Type               => Activity,
+         Input_Event        => newtc,
+         Output_Event       => dl_prio_tc,
+         Activity_Operation => tc_exec_prio,
+         Activity_Server    => tcmanager)));
+
+Transaction (
+   Type            => regular,
+   Name            => trans_hkfdir_tc,
+   External_Events => 
+      ( ( Type             => Bursty,
+          Name             => new_hkfdir_tc,
+          Avg_Interarrival => 0.000,
+          Distribution     => UNIFORM,
+          Bound_Interval   => 1.000,
+          Max_Arrivals     => 3)),
+   Internal_Events => 
+      ( ( Type => Regular,
+          Name => irqsignal),
+        ( Type => Regular,
+          Name => newtc),
+        ( Type => Regular,
+          Name => dl_fhkdir_tc,
+          Timing_Requirements => 
+            ( Type             => Hard_Global_Deadline,
+              Deadline         => 1.000,
+              Referenced_Event => new_hkfdir_tc)),
+        ( Type => Regular,
+          Name => fin)),
+   Event_Handlers  => 
+      ( (Type               => Activity,
+         Input_Event        => new_hkfdir_tc,
+         Output_Event       => irqsignal,
+         Activity_Operation => irq18tophalf,
+         Activity_Server    => irq18handler),
+        (Type               => Activity,
+         Input_Event        => irqsignal,
+         Output_Event       => newtc,
+         Activity_Operation => irq18bottomhalf,
+         Activity_Server    => irq18bottomhalftask),
+        (Type               => Activity,
+         Input_Event        => newtc,
+         Output_Event       => dl_fhkdir_tc,
+         Activity_Operation => f_acc_fwd,
+         Activity_Server    => tcmanager),
+        (Type               => Activity,
+         Input_Event        => dl_fhkdir_tc,
+         Output_Event       => fin,
+         Activity_Operation => fexechk_fdir_tc,
+         Activity_Server    => hk_fdirmng)));
+
+Transaction (
+   Type            => regular,
+   Name            => trans_control_actitud,
+   External_Events => 
+      ( ( Type       => Periodic,
+          Name       => ev_do_attitude_ctrl,
+          Period     => 0.100000,
+          Max_Jitter => 0.000,
+          Phase      => 0.000)),
+   Internal_Events => 
+      ( ( Type => Regular,
+          Name => signal),
+        ( Type => Regular,
+          Name => dl_attitude_ctrl,
+          Timing_Requirements => 
+            ( Type             => Hard_Global_Deadline,
+              Deadline         => 0.100000,
+              Referenced_Event => ev_do_attitude_ctrl))),
+   Event_Handlers  => 
+      ( (Type               => Activity,
+         Input_Event        => ev_do_attitude_ctrl,
+         Output_Event       => signal,
+         Activity_Operation => fdoattitudectrl,
+         Activity_Server    => observmng),
+        (Type               => Activity,
+         Input_Event        => signal,
+         Output_Event       => dl_attitude_ctrl,
+         Activity_Operation => fprogattitudectrl,
+         Activity_Server    => observmng)));
+
