@@ -26,7 +26,7 @@ CCObsMng::CCObsMng(TEDROOMComponentID id,
 		// *******************  Timers  ********************
 
 		ObservTimer(&EDROOMtimingSAP, 2 ),
-		AttCtrlTimer(&EDROOMtimingSAP, 2 ),
+		AttitudeCtrl_Timer(&EDROOMtimingSAP, 2 ),
 
 		// ***************	Top State  *****************
 

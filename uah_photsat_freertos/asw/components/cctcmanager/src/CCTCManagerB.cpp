@@ -19,6 +19,7 @@ CCTCManager::EDROOM_CTX_Top_0::EDROOM_CTX_Top_0(CCTCManager &act,
 	EDROOMcomponent(act),
 	Msg(EDROOMcomponent.Msg),
 	MsgBack(EDROOMcomponent.MsgBack),
+	ObsCtrl(EDROOMcomponent.ObsCtrl),
 	BKGExecCtrl(EDROOMcomponent.BKGExecCtrl),
 	HK_FDIRCtrl(EDROOMcomponent.HK_FDIRCtrl),
 	RxTC(EDROOMcomponent.RxTC),
@@ -34,6 +35,7 @@ CCTCManager::EDROOM_CTX_Top_0::EDROOM_CTX_Top_0(EDROOM_CTX_Top_0 &context):
 	EDROOMcomponent(context.EDROOMcomponent),
 	Msg(context.Msg),
 	MsgBack(context.MsgBack),
+	ObsCtrl(context.ObsCtrl),
 	BKGExecCtrl(context.BKGExecCtrl),
 	HK_FDIRCtrl(context.HK_FDIRCtrl),
 	RxTC(context.RxTC),
@@ -107,6 +109,22 @@ void	CCTCManager::EDROOM_CTX_Top_0::FFwdToBKGTCExec()
 	*pSBKGTC_Data=VCurrentTC;  
    //Send message 
    BKGExecCtrl.send(SBKGTC,pSBKGTC_Data,&EDROOMPoolCDTCHandler); 
+}
+
+
+
+void	CCTCManager::EDROOM_CTX_Top_0::FFwdToObsMng()
+
+{
+   //Allocate data from pool
+  CDTCHandler * pSObsMng_TC_Data = EDROOMPoolCDTCHandler.AllocData();
+	
+		// Complete Data 
+	
+	*pSObsMng_TC_Data=VCurrentTC;  
+	
+   //Send message 
+   ObsCtrl.send(SObsMng_TC,pSObsMng_TC_Data,&EDROOMPoolCDTCHandler); 
 }
 
 
@@ -231,6 +249,16 @@ bool	CCTCManager::EDROOM_CTX_Top_0::GFwdToHK_FDIR()
 {
 
 return VTCExecCtrl.IsHK_FDIRTC();
+
+}
+
+
+
+bool	CCTCManager::EDROOM_CTX_Top_0::GFwdToObsMng()
+
+{
+
+return VTCExecCtrl.IsObs_TC();
 
 }
 
@@ -371,8 +399,21 @@ void CCTCManager::EDROOM_SUB_Top_0::EDROOMBehaviour()
 					//Next State is Reboot
 					edroomNextState = Reboot;
 				 } 
+				//Default Branch ExecPrioTC
+				else
+				{
+					//Execute Action 
+					FExecTC();
+
+					//Branch taken is HandleTC_ExecPrioTC
+					edroomCurrentTrans.localId =
+						HandleTC_ExecPrioTC;
+
+					//Next State is Ready
+					edroomNextState = Ready;
+				 } 
 				//Evaluate Branch FwdHK_FDIRTC
-				else if( GFwdToHK_FDIR() )
+				if( GFwdToHK_FDIR() )
 				{
 					//Send Asynchronous Message 
 					FFwdHK_FDIRTC();
@@ -397,15 +438,15 @@ void CCTCManager::EDROOM_SUB_Top_0::EDROOMBehaviour()
 					//Next State is Ready
 					edroomNextState = Ready;
 				 } 
-				//Default Branch ExecPrioTC
+				//Default Branch FwdToObsMng
 				else
 				{
-					//Execute Action 
-					FExecTC();
+					//Send Asynchronous Message 
+					FFwdToObsMng();
 
-					//Branch taken is HandleTC_ExecPrioTC
+					//Branch taken is HandleTC_FwdToObsMng
 					edroomCurrentTrans.localId =
-						HandleTC_ExecPrioTC;
+						HandleTC_FwdToObsMng;
 
 					//Next State is Ready
 					edroomNextState = Ready;
