@@ -173,7 +173,7 @@ tc_accept_report_t pus_service1_tc_acceptation(tc_handler_t *ptc_handler) {
 					accept_report.accept_status = TCAcceptationSubTypeError;
 				}
 				break;
-			//TODO Accept ST[129] TCs
+			//TODO Accept ST[129] TCs xxx
 
 			default:
 				//TC is not accepted
