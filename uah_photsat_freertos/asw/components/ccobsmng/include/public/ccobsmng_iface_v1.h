@@ -17,7 +17,7 @@
 //******************************************************************************
 // Required software interfaces
 
-#include <public/pus_service_iface_ .h>
+#include <public/pus_services_iface_v1.h>
 
 
 /**
@@ -257,7 +257,7 @@ public:
 		/**
 		 * \brief  
 		 */
-		void	FEndObservation());
+		void	FEndObservation();
 
 		/**
 		 * \brief  
@@ -272,7 +272,7 @@ public:
 		/**
 		 * \brief  
 		 */
-		void	FProgAttitudeCtrl()();
+		void	FProgAttitudeCtrl();
 
 		/**
 		 * \brief  
@@ -292,7 +292,7 @@ public:
 		/**
 		 * \brief  
 		 */
-		bool	GLastImage()();
+		bool	GLastImage();
 
 		/**
 		 * \brief  

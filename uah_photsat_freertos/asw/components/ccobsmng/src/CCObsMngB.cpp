@@ -71,10 +71,10 @@ pus_service129_do_attitude_ctrl();
 
 
 
-void	CCObsMng::EDROOM_CTX_Top_0::FEndObservation())
+void	CCObsMng::EDROOM_CTX_Top_0::FEndObservation()
 
 {
-
+Pr_Time VNextTimeOut;
 VNextTimeOut.GetTime();
 pus_service129_end_observation();
 
@@ -87,11 +87,11 @@ void	CCObsMng::EDROOM_CTX_Top_0::FInit_Obs()
 {
    //Define absolute time
   Pr_Time time;
-	 
+  Pr_Time VNextTimeout;
 	//Timing Service useful methods
 	 
 	time.GetTime(); // Get current monotonic time
-	time.Add(0,100000); // Add X sec + Y microsec
+	time+=Pr_Time(0,100000); // Add X sec + Y microsec
         VNextTimeout=time;
  
    //Program absolute timer 
@@ -113,14 +113,13 @@ varSObsMng_TC.ExecTC();
 
 
 
-void	CCObsMng::EDROOM_CTX_Top_0::FProgAttitudeCtrl()()
+void	CCObsMng::EDROOM_CTX_Top_0::FProgAttitudeCtrl()
 
 {
    //Define absolute time
   Pr_Time time;
-	 
+  Pr_Time VNextTimeout;
 	
-	 
 	
 VNextTimeout+= Pr_Time(0,100000); // Add X sec + Y microsec 
 time=VNextTimeout; 
@@ -167,11 +166,11 @@ pus_service129_start_observation();
 
 
 
-bool	CCObsMng::EDROOM_CTX_Top_0::GLastImage()()
+bool	CCObsMng::EDROOM_CTX_Top_0::GLastImage()
 
 {
 
-return_pus_service129_is_last_image()
+return pus_service129_is_last_image();
 
 }
 
@@ -181,7 +180,7 @@ bool	CCObsMng::EDROOM_CTX_Top_0::GReadyToObservation()
 
 {
 
-return_pus_service129_is_observation_ready();
+return pus_service129_is_observation_ready();
 
 }
 
@@ -267,7 +266,7 @@ void CCObsMng::EDROOM_SUB_Top_0::EDROOMBehaviour()
 				//Execute Action 
 				FTakeImage();
 				//Evaluate Branch True1
-				if( GLastImage()() )
+				if( GLastImage())
 				{
 					//Execute Actions 
 					FEndObservation();
