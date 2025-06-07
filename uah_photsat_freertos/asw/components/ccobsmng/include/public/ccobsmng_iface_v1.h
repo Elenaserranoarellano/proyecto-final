@@ -17,7 +17,7 @@
 //******************************************************************************
 // Required software interfaces
 
-#include <public/pus_services_iface_v1.h>
+#include <public/pus_services_iface_ v1.h>
 
 
 /**
@@ -214,12 +214,15 @@ public:
 		const Pr_Time CImageInterval;
 
 
+		//!Variables
+		Pr_Time &VNextTimeOut;
 
 
 
 
 		//!Constructor
-		EDROOM_CTX_Top_0 (CCObsMng &act );
+		EDROOM_CTX_Top_0 (CCObsMng &act,
+				Pr_Time & EDROOMpVarVNextTimeOut );
 
 		//!Copy constructor
 		EDROOM_CTX_Top_0 (EDROOM_CTX_Top_0 &context);
@@ -321,6 +324,8 @@ public:
 		//!next state identifier
 		EDROOM_CTX_Top_0::TEDROOMStateID edroomNextState;
 
+		//!Variables
+		Pr_Time VNextTimeOut;
 
 
 

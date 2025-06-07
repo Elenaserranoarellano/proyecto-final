@@ -10,7 +10,8 @@
 
 	// CONSTRUCTORS***********************************************
 
-CCObsMng::EDROOM_CTX_Top_0::EDROOM_CTX_Top_0(CCObsMng &act ):
+CCObsMng::EDROOM_CTX_Top_0::EDROOM_CTX_Top_0(CCObsMng &act,
+	 Pr_Time & EDROOMpVarVNextTimeOut ):
 
 	EDROOMcomponent(act),
 	Msg(EDROOMcomponent.Msg),
@@ -18,7 +19,8 @@ CCObsMng::EDROOM_CTX_Top_0::EDROOM_CTX_Top_0(CCObsMng &act ):
 	ObsCtrl(EDROOMcomponent.ObsCtrl),
 	ObservTimer(EDROOMcomponent.ObservTimer),
 	AttitudeCtrl_Timer(EDROOMcomponent.AttitudeCtrl_Timer),
-	CImageInterval(0,5)
+	CImageInterval(0,5),
+	VNextTimeOut(EDROOMpVarVNextTimeOut)
 {
 }
 
@@ -30,7 +32,8 @@ CCObsMng::EDROOM_CTX_Top_0::EDROOM_CTX_Top_0(EDROOM_CTX_Top_0 &context):
 	ObsCtrl(context.ObsCtrl),
 	ObservTimer(context.ObservTimer),
 	AttitudeCtrl_Timer(context.AttitudeCtrl_Timer),
-	CImageInterval(0,5)
+	CImageInterval(0,5),
+	VNextTimeOut(context.VNextTimeOut)
 {
 
 }
@@ -74,7 +77,7 @@ pus_service129_do_attitude_ctrl();
 void	CCObsMng::EDROOM_CTX_Top_0::FEndObservation()
 
 {
-Pr_Time VNextTimeOut;
+
 VNextTimeOut.GetTime();
 pus_service129_end_observation();
 
@@ -87,12 +90,12 @@ void	CCObsMng::EDROOM_CTX_Top_0::FInit_Obs()
 {
    //Define absolute time
   Pr_Time time;
-  Pr_Time VNextTimeout;
+	 
 	//Timing Service useful methods
 	 
 	time.GetTime(); // Get current monotonic time
 	time+=Pr_Time(0,100000); // Add X sec + Y microsec
-        VNextTimeout=time;
+        VNextTimeOut=time;
  
    //Program absolute timer 
    AttitudeCtrl_Timer.InformAt( time ); 
@@ -118,11 +121,12 @@ void	CCObsMng::EDROOM_CTX_Top_0::FProgAttitudeCtrl()
 {
    //Define absolute time
   Pr_Time time;
-  Pr_Time VNextTimeout;
+	 
 	
+	 
 	
 VNextTimeout+= Pr_Time(0,100000); // Add X sec + Y microsec 
-time=VNextTimeout; 
+time=VNextTimeOut; 
    //Program absolute timer 
    AttitudeCtrl_Timer.InformAt( time ); 
 }
@@ -170,7 +174,7 @@ bool	CCObsMng::EDROOM_CTX_Top_0::GLastImage()
 
 {
 
-return pus_service129_is_last_image();
+return_pus_service129_is_last_image()
 
 }
 
@@ -180,7 +184,7 @@ bool	CCObsMng::EDROOM_CTX_Top_0::GReadyToObservation()
 
 {
 
-return pus_service129_is_observation_ready();
+return_pus_service129_is_observation_ready();
 
 }
 
@@ -201,7 +205,8 @@ return pus_service129_is_observation_ready();
 	// CONSTRUCTOR*************************************************
 
 CCObsMng::EDROOM_SUB_Top_0::EDROOM_SUB_Top_0 (CCObsMng&act):
-		EDROOM_CTX_Top_0(act)
+		EDROOM_CTX_Top_0(act,
+			VNextTimeOut)
 {
 
 }
@@ -240,6 +245,8 @@ void CCObsMng::EDROOM_SUB_Top_0::EDROOMBehaviour()
 				//Evaluate Branch False
 				if( GReadyToObservation() )
 				{
+					//Execute Action 
+					FProgAttitudeCtrl();
 
 					//Branch taken is Guard1_False
 					edroomCurrentTrans.localId =
@@ -266,7 +273,7 @@ void CCObsMng::EDROOM_SUB_Top_0::EDROOMBehaviour()
 				//Execute Action 
 				FTakeImage();
 				//Evaluate Branch True1
-				if( GLastImage())
+				if( GLastImage()() )
 				{
 					//Execute Actions 
 					FEndObservation();
