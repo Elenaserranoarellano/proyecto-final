@@ -202,8 +202,8 @@ public:
 		//!Transition Identifiers
 		enum TEDROOMTransitionID{Init,
 			Guard1,
-			Guard1_False,
 			Guard1_True,
+			Guard1_False,
 			Guard2,
 			Guard2_True1,
 			Guard2_False1,

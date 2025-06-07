@@ -125,7 +125,7 @@ void	CCObsMng::EDROOM_CTX_Top_0::FProgAttitudeCtrl()
 	
 	 
 	
-VNextTimeout+= Pr_Time(0,100000); // Add X sec + Y microsec 
+VNextTimeOut+= Pr_Time(0,100000); // Add X sec + Y microsec 
 time=VNextTimeOut; 
    //Program absolute timer 
    AttitudeCtrl_Timer.InformAt( time ); 
@@ -174,7 +174,7 @@ bool	CCObsMng::EDROOM_CTX_Top_0::GLastImage()
 
 {
 
-return_pus_service129_is_last_image()
+return pus_service129_is_last_image();
 
 }
 
@@ -184,7 +184,7 @@ bool	CCObsMng::EDROOM_CTX_Top_0::GReadyToObservation()
 
 {
 
-return_pus_service129_is_observation_ready();
+return pus_service129_is_observation_ready();
 
 }
 
@@ -242,8 +242,21 @@ void CCObsMng::EDROOM_SUB_Top_0::EDROOMBehaviour()
 
 				//Execute Action 
 				FDoActtitudeCtrl();
-				//Evaluate Branch False
+				//Evaluate Branch True
 				if( GReadyToObservation() )
+				{
+					//Execute Action 
+					FToObservation();
+
+					//Branch taken is Guard1_True
+					edroomCurrentTrans.localId =
+						Guard1_True;
+
+					//Next State is Observation
+					edroomNextState = Observation;
+				 } 
+				//Default Branch False
+				else
 				{
 					//Execute Action 
 					FProgAttitudeCtrl();
@@ -255,17 +268,6 @@ void CCObsMng::EDROOM_SUB_Top_0::EDROOMBehaviour()
 					//Next State is Standby
 					edroomNextState = Standby;
 				 } 
-				//Default Branch True
-				else
-				{
-
-					//Branch taken is Guard1_True
-					edroomCurrentTrans.localId =
-						Guard1_True;
-
-					//Next State is Observation
-					edroomNextState = Observation;
-				 } 
 				break;
 			//To Choice Point Guard2
 			case (Guard2):
@@ -273,7 +275,7 @@ void CCObsMng::EDROOM_SUB_Top_0::EDROOMBehaviour()
 				//Execute Action 
 				FTakeImage();
 				//Evaluate Branch True1
-				if( GLastImage()() )
+				if( GLastImage() )
 				{
 					//Execute Actions 
 					FEndObservation();
