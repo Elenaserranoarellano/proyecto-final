@@ -33,7 +33,7 @@
 #include <public/emu_gss_v1.h>
 
 //TODO Complete FT_UAH_PHOTSAT_SERV_129_0010
-#define FT_UAH_PHOTSAT_SERV_129_0010
+//#define FT_UAH_PHOTSAT_SERV_129_0010
 
 #ifdef FT_UAH_PHOTSAT_SERV_129_0010
 
@@ -43,13 +43,14 @@
 EmuGSS_TCProgram3_5 prog_FT_UAH_PHOTSAT_SERV_129_0010_step0(FT_UAH_PHOTSAT_SERV_129_0010_step0,
 "FT_UAH_PHOTSAT_SERV_129_0010 step 0, Enable SID 20 ", 20);
 EmuGSS_TCProgram129_1 prog_FT_UAH_PHOTSAT_SERV_129_0010_step1(FT_UAH_PHOTSAT_SERV_129_0010_step1,
-"FT_UAH_PHOTSAT_SERV_129_0010 step 1, definimos los parametros para 2 imagenes actitud pitch=1200 yaw=1200",
-1200, 1200 , 2);
+"FT_UAH_PHOTSAT_SERV_129_0010 step 1, definimos los parametros para 4 imagenes actitud pitch=150 yaw=180",
+150, 180 , 4);
+
 
 #endif
 
 //TODO Complete FT_UAH_PHOTSAT_SERV_129_FDIR_0020
-//#define FT_UAH_PHOTSAT_SERV_129_0020
+#define FT_UAH_PHOTSAT_SERV_129_0020
 
 #ifdef FT_UAH_PHOTSAT_SERV_129_0020
 
@@ -77,7 +78,7 @@ EmuGSS_TCProgram12_1 prog_FT_UAH_PHOTSAT_SERV_129_FDIR_0020_step_4(FT_UAH_PHOTSA
 EmuGSS_TCProgram19_1_Action_129_3 prog_FT_UAH_PHOTSAT_SERV_129_FDIR_0020_step_5(FT_UAH_PHOTSAT_SERV_129_FDIR_0020_step5,
 "FT_UAH_ASW_Event_Action_0130 step 5, La acción del EvID 0x4003 es el reset",
 0x4003);
-EmuGSS_TCProgram19_2 prog_FT_UAH_PHOTSAT_SERV_129_FDIR_0020_step_6(FT_UAH_PHOTSAT_SERV_129_FDIR_0020_step6,
+EmuGSS_TCProgram19_4 prog_FT_UAH_PHOTSAT_SERV_129_FDIR_0020_step_6(FT_UAH_PHOTSAT_SERV_129_FDIR_0020_step6,
 "FT_UAH_ASW_Event_Action_0130 step 6, Habilita la acción del EvID 0x4003",
 0x4003);
 EmuGSS_TCProgram129_2 prog_FT_UAH_PHOTSAT_SERV_129_FDIR_0020_step_7(FT_UAH_PHOTSAT_SERV_129_FDIR_0020_step7,

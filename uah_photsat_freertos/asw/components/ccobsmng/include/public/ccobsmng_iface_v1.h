@@ -17,7 +17,7 @@
 //******************************************************************************
 // Required software interfaces
 
-#include <public/pus_services_iface_ v1.h>
+#include <public/pus_services_iface_v1.h>
 
 
 /**
