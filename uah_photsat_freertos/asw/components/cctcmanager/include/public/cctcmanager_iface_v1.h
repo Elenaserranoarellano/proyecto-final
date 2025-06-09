@@ -250,10 +250,10 @@ public:
 			NewRxTC_NotAccepted,
 			HandleTC,
 			HandleTC_ToReboot,
-			HandleTC_ExecPrioTC,
 			HandleTC_FwdHK_FDIRTC,
 			HandleTC_FwdToBKGTCExec,
 			HandleTC_FwdToObsMng,
+			HandleTC_ExecPrioTC,
 			NewEvAction,
 			EDROOMMemoryTrans };
 
